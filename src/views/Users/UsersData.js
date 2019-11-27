@@ -27,5 +27,4 @@ const usersData = [
   {id: 25, name: 'Aulus Agmundr', registered: '2018/01/01', role: 'Member', status: 'Pending'},
   {id: 42, name: 'Ford Prefex', registered: '2001/05/21', role: 'Alien', status: 'Don\'t panic!'}
 ]
-
 export default usersData

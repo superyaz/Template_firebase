@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
 import toastr from 'toastr';
-import { authRef, userRef, db } from '../../../firebase/init';
+import {Link} from 'react-router-dom';
+import { authRef } from '../../../firebase/init';
 class Login extends Component {
   constructor() {
     super()
@@ -10,13 +11,6 @@ class Login extends Component {
       password: '',
       error: ''
     }
-  }
-  componentDidMount() {
-    this.news = db.collection('news').get().then((queryResult) => {
-      queryResult.forEach(doc => {
-        console.log(doc.data());
-      });
-    });
   }
   onLogin = () => {
     authRef
@@ -34,6 +28,9 @@ class Login extends Component {
     const newState = this.state;
     newState[e.target.id] = e.target.value;
     this.setState(newState);
+  }
+  onRegister =()=>{
+
   }
   render() {
 
@@ -88,7 +85,13 @@ class Login extends Component {
                     <div>
                       <h2>Registrarse</h2>
                       <p>Crea una cuenta para acceder a todas las caracteristicas.</p>
+                      <Link to='/Register'>
                       <Button color="primary" className="mt-3" active>Registrar ahora</Button>
+                      </Link>
+                      <Link to='/Tabs'>
+                      <Button color="primary" className="mt-3" active>Tabs</Button>
+                      </Link>
+                      
                     </div>
                   </CardBody>
                 </Card>

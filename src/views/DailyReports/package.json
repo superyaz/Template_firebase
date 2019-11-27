@@ -1,0 +1,6 @@
+{
+    "name": "DailyReports",
+    "version": "0.0.0",
+    "private": true,
+    "main": "./DailyReports.js"
+  }

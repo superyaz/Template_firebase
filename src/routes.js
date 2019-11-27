@@ -186,10 +186,31 @@ const AddUser=Loadable({
   loading: Loading,
 })
 
+const News=Loadable({
+  loader:()=>import('./views/News/News'),
+  loading: Loading,
+})
+
+const DailyReports=Loadable({
+  loader:()=>import('./views/DailyReports/DailyReports'),
+  loading: Loading,
+})
+
+const Contests=Loadable({
+  loader:()=>import('./views/Contests/Contests'),
+  loading: Loading,
+})
+
+const Register=Loadable({
+  loader:()=>import('./views/Pages/Register'),
+  loading: Loading,
+})
+
+
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
-  { path: '/', exact: true, name: 'Home', component: DefaultLayout },
+  { path: '/', exact: true, name: 'Inicio', component: DefaultLayout },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
   { path: '/theme', exact: true, name: 'Theme', component: Colors },
   { path: '/theme/colors', name: 'Colors', component: Colors },
@@ -228,9 +249,14 @@ const routes = [
   { path: '/notifications/modals', name: 'Modals', component: Modals },
   { path: '/widgets', name: 'Widgets', component: Widgets },
   { path: '/charts', name: 'Charts', component: Charts },
-  { path: '/users', exact: true,  name: 'Users', component: Users },
-  { path: '/users/add', exact: true, name: 'Add User', component: AddUser },
+  { path: '/users', exact: true,  name: 'Usuarios', component: Users },
+  { path: '/users/add', exact: true, name: 'Agregar Usuario', component: AddUser },
+  { path: '/users/user', exact: true, name: 'Lista Usuarios', component: User },
   { path: '/users/:id', exact: true, name: 'Edit User', component: AddUser },
+  { path: '/news', exact: true,  name: 'Noticias', component: News },
+  { path: '/dailyreports', exact: true,  name: 'Reportes', component: DailyReports },
+  { path: '/contests', exact: true,  name: 'Concursos', component: Contests },
+  { path: '/register', exact: true,  name: 'Register', component: Register },
 ];
 
 export default routes;

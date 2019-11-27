@@ -3,7 +3,14 @@
 */
 import { combineReducers } from 'redux';
 import userReducer from './userreducer';
+import newsReducer from './newsreducer';
+import dailyreportsReducer from './dailyReportsreduce';
+import contestsReducer from './contestsreduce';
+
 const rootReducer = combineReducers({
-    userReducer
+    userReducer, 
+    newsReducer,
+    dailyreportsReducer,
+    contestsReducer,
 });
 export default rootReducer;

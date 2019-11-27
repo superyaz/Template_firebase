@@ -1,32 +1,38 @@
 export default {
   items: [
     {
-      name: 'Dashboard',
+      name: 'Administración',
       url: '/dashboard',
-      icon: 'icon-speedometer',
+      icon: 'icon-badge',
       badge: {
         variant: 'info',
-        text: 'NEW',
       },
     },
     {
-      title: true,
-      name: 'Users ManageMent',
-      wrapper: {            // optional wrapper object
-        element: '',        // required valid HTML5 element tag
-        attributes: {}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
-      },
-      class: ''             // optional class names space delimited list for title item ex: "text-center"
+      name:'Noticias',
+      url:'/news', 
+      icon:'icon-notebook',
     },
     {
-      name: 'View Users',
+      name:'Reportes',
+      url:'/DailyReports', 
+      icon:'icon-calendar',
+    },
+    {
+      name:'Concursos',
+      url:'/Contests', 
+      icon:'icon-graduation',
+    },
+    {
+      name: 'Lista Usuarios',
       url: '/users',
-      icon: 'icon-user',
+      icon: 'icon-people',
     },
-    {
-      name: 'Add Users',
-      url: '/users/add',
-      icon: 'icon-user',
-    }
+    // {
+    //   name: 'Agregar Usuarios',
+    //   url: '/users/add',
+    //   icon: 'icon-user',
+    // },
+
   ],
 };

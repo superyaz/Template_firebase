@@ -1,4 +1,4 @@
-import { ISLOADING, GET_USERS_LIST } from '../constants/action-types';
+import { ISLOADING, GET_USERS_LIST} from '../constants/action-types';
 const getInitialState = () => ({
     users: [],
     isLoading: false,

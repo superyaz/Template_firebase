@@ -1,3 +1,6 @@
 export const GET_USERS_LIST = "GET_USERS_LIST";
+export const GET_NEWS_LIST = "GET_NEWS_LIST";
+export const GET_DAILYREPORTS_LIST = "GET_DAILYREPORTS_LIST";
+export const GET_CONTEST_LIST = "GET_CONTEST_LIST";
 export const ISLOADING="ISLOADING";
 export const ADD_USER="ADD_USER";

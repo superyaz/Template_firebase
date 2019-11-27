@@ -15,7 +15,7 @@ class DefaultFooter extends Component {
 
     return (
       <React.Fragment>
-        <span><a href="https://quinteropartners.com/es">Quintero&Partners</a> &copy; 2019.</span>
+        <span className="ml-left"><a href="https://quinteropartners.com/es">Quintero&Partners</a> &copy; 2019.</span>
         <span className="ml-auto">Powered by <a href="https://multimedialab.co/">Multimedia Lab</a></span>
       </React.Fragment>
     );

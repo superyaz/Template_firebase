@@ -40,7 +40,7 @@ class ButtonDropdowns extends Component {
                   </DropdownToggle>
                   <DropdownMenu right>
                     <DropdownItem header>Header</DropdownItem>
-                    <DropdownItem disabled>Action Disabled</DropdownItem>
+                    <DropdownItem enable>Action Disabled</DropdownItem>
                     <DropdownItem>Action</DropdownItem>
                     <DropdownItem divider />
                     <DropdownItem>Another Action</DropdownItem>

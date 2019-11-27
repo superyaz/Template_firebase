@@ -1,6 +1,8 @@
-import { ISLOADING, GET_USERS_LIST } from '../constants/action-types';
-import { userRef, authRef } from '../firebase/init';
+import { ISLOADING, GET_USERS_LIST} from '../constants/action-types';
+import { userRef, authRef, db } from '../firebase/init';
 import toastr from 'toastr';
+
+
 export const isLoading = bool => ({
     type: ISLOADING,
     isLoading: bool
@@ -11,31 +13,25 @@ export const getUserList = users => ({
     users
 });
 
-
-
-
 export const getUsers = () => {
     return (dispatch) => {
         dispatch(isLoading(true));
         let users = [];
-        userRef.once("value").then((snapshot) => {
+        db.collection("users").get().then((snapshot) => {
             snapshot.forEach(function (childSnapshot) {
-                let values = childSnapshot.val();
+                let values = childSnapshot.data();
                 let childData = {
-                    id: values.id,
-                    firstname: values.firstname,
-                    lastname: values.lastname,
+                    id: childSnapshot.id,
+                    fullname: values.fullname,
                     email: values.email,
                     phone: values.phone,
-                    key: childSnapshot.key,
-                    userrole: values.userrole
-
+                    key: childSnapshot.ref.path,
+                    type: values.type
                 };
                 users.push(childData);
             });
             dispatch(getUserList(users));
-        })
-
+        });
     }
 }
 export const addUser = (user, password) => {
@@ -48,7 +44,7 @@ export const addUser = (user, password) => {
                 userRef.push(user, (res) => {
                     toastr.success('user added successfully');
                 });
-            })
+            });
     }
 }
 export const editUser = (user) => {
@@ -59,14 +55,13 @@ export const editUser = (user) => {
             .update(user)
             .catch(error => {
                 toastr.error(error.message);
-            })
+            });
     }
 }
 export const removeUser = (key, ) => {
     return (dispatch) => {
         dispatch(isLoading(true));
         var data = userRef.equalTo({ key });
-
     }
 }
 

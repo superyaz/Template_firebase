@@ -24,9 +24,6 @@ import DefaultHeader from './DefaultHeader';
 import { authRef } from '../../firebase/init';
 class DefaultLayout extends Component {
 
-  constructor() {
-    super()
-  }
   componentDidMount() {
     let checkUser = authRef.currentUser;
     if (checkUser) {
@@ -40,7 +37,7 @@ class DefaultLayout extends Component {
   render() {
     return (
       <div className="app">
-        <AppHeader fixed>
+        <AppHeader fixed style={{backgroundColor:'#267DC9', height:56}}>
           <DefaultHeader />
         </AppHeader>
         <div className="app-body">
