@@ -59,15 +59,15 @@ class DailyReports extends Component {
                 <Table responsive size="sm">
                 <thead>
                     <tr>
+                      <th>Id</th>
                       <th>Alp</th>
-                      <th>Equipo</th> 
-                      <th>Comentarios</th>
-                      <th>Diricción</th>
-                      <th>Presentaciones</th>
-                      <th>Referencias</th>
-                      <th>Ventas</th>
+                      <th>Appoiments</th> 
+                      <th>Comments</th>
+                      <th>Lead</th>
+                      <th>Presentations</th>
+                      <th>Referrals</th>
+                      <th>Sales</th>
                       <th>Usuario</th>
-                      <th></th>
                     </tr>
                   </thead>
                   <tbody>

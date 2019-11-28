@@ -191,6 +191,11 @@ const News=Loadable({
   loading: Loading,
 })
 
+const AddNews=Loadable({
+  loader:()=>import('./views/News/AddNews'),
+  loading: Loading,
+})
+
 const DailyReports=Loadable({
   loader:()=>import('./views/DailyReports/DailyReports'),
   loading: Loading,
@@ -201,6 +206,10 @@ const Contests=Loadable({
   loading: Loading,
 })
 
+const AddContests=Loadable({
+  loader:()=>import('./views/Contests/AddContests'),
+  loading: Loading,
+})
 const Register=Loadable({
   loader:()=>import('./views/Pages/Register'),
   loading: Loading,
@@ -254,8 +263,10 @@ const routes = [
   { path: '/users/user', exact: true, name: 'Lista Usuarios', component: User },
   { path: '/users/:id', exact: true, name: 'Edit User', component: AddUser },
   { path: '/news', exact: true,  name: 'Noticias', component: News },
+  { path: '/news/:id', exact: true, name: 'Editar Noticias', component: AddNews},
   { path: '/dailyreports', exact: true,  name: 'Reportes', component: DailyReports },
   { path: '/contests', exact: true,  name: 'Concursos', component: Contests },
+  { path: '/contests/:id', exact: true, name: 'Editar Concursos', component: AddContests},
   { path: '/register', exact: true,  name: 'Register', component: Register },
 ];
 

@@ -43,8 +43,8 @@ class DefaultHeader extends Component {
         <AppSidebarToggler className="d-lg-none responsive" display="md" mobile/>
         <AppNavbarBrand
         style={{backgroundColor:'#267DC9', display:'flex', justifyContent:'unset'}}
-          full={{ src: logo, width: 100, height: 45, alt: 'Quintero&Partners' }}
-          minimized={{ src: logo, width: 100, height: 45, alt: 'Quintero&Partners' }}
+          full={{ src: logo, width: 100, height: 45, alt: 'Quintero&Partners', marginLeft: 15 }}
+          minimized={{ src: logo, width: 100, height: 45, alt: 'Quintero&Partners', marginLeft: 15 }}
         />
         {/* <AppSidebarToggler className="d-md-down-none" display="lg" style={{backgroundColor:'#FFFFFF'}}/> */}
         {/* <Nav className="d-md-down-none" navbar>
@@ -52,7 +52,10 @@ class DefaultHeader extends Component {
         <Nav className="ml-auto" navbar >
           <AppHeaderDropdown direction="down">
             <DropdownToggle nav>
-            <img src={'assets/img/avatars/6.jpg'} className="img-avatar" alt="administrador" />
+              <div>
+                <p style={{color: "#FFF", marginBottom: 0, marginRight: 10}}>Administrador</p>
+              </div>
+            {/* <img src={'assets/img/avatars/6.jpg'} className="img-avatar" alt="administrador" /> */}
             </DropdownToggle>
             <DropdownMenu right style={{ right: 'auto' }}>
               <DropdownItem header tag="div" className="text-center"><strong>Account</strong></DropdownItem>

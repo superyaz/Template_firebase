@@ -1,12 +1,21 @@
 import React, { Component } from "react";
-import { Card, CardBody, CardHeader, Col, Row, Table } from "reactstrap";
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Col,
+  Row,
+  Table,
+  Button
+} from "reactstrap";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { getNews } from "../../actions/newsactions";
+import { Link } from "react-router-dom";
 
 function NewRow(props) {
   const news = props.news;
-  const newLink = `·/news/${news.id}`;
+  const newLink = `#/news/:id ${news.id}`; //${news.id} Lo quite ya que no me dejaba ingresar a la ruta news/add
   let deleteStyle = {
     color: "#20a8d8",
     cursor: "pointer"
@@ -47,8 +56,15 @@ class News extends Component {
         <Row>
           <Col md={12}>
             <Card>
-              <CardHeader>
+              <CardHeader style={{display:"flex", alignItems:"center"}}>
                 <i className=""></i> Noticias{" "}
+                <div style={{display:"flex", justifyContent:"flex-end", width:"100%", marginLeft:"85%" }} className="container">
+                  <Link to="/news/:id">
+                    <Button style={{ textAlign: "left" }} color="success">
+                      +
+                    </Button>{" "}
+                  </Link>
+                </div>
               </CardHeader>
               <CardBody>
                 <Table responsive size="sm">
@@ -63,13 +79,13 @@ class News extends Component {
                     </tr>
                   </thead>
                   <tbody>
-                        {this.props.news.map((news, index) => (
-                          <NewRow
-                            key={index}
-                            news={news}
-                            onDelete={this.onDelete}
-                          />
-                        ))}
+                    {this.props.news.map((news, index) => (
+                      <NewRow
+                        key={index}
+                        news={news}
+                        onDelete={this.onDelete}
+                      />
+                    ))}
                   </tbody>
                 </Table>
               </CardBody>
