@@ -25,7 +25,7 @@ function DailyRow(props) {
     <td>{dailyReport.referrals}</td>
     <td>{dailyReport.sales}</td>
     <td>{dailyReport.user}</td>
-    <td>
+    <td style={{display:"flex"}}>
       <a href={dailyReportsLink}>
         <i className="fa fa-edit fa-2x" aria-hidden="true"></i>
       </a>{" "}

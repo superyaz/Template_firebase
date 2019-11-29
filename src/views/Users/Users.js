@@ -18,7 +18,7 @@ function UserRow(props) {
         <td>{user.email}</td>
         <td>{user.phone}</td>
         <td>{user.type}</td>
-        <td>
+        <td style={{display:"flex"}}>
           <a href={userLink}>
             <i className="fa fa-edit fa-2x" aria-hidden="true"></i>
           </a>{" "}

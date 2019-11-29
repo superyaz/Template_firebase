@@ -1,37 +1,34 @@
-import React, { Component } from "react";
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Col,
-  Row,
-  Table,
-  Button
-} from "reactstrap";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { getNews } from "../../actions/newsactions";
-import { Link } from "react-router-dom";
+import React, {Component} from 'react';
+import {Card, CardBody, CardHeader, Col, Row, Table, Button} from 'reactstrap';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {getNews, editNews} from '../../actions/newsactions';
+import {Link} from 'react-router-dom';
 
 function NewRow(props) {
   const news = props.news;
   const newLink = `#/news/:id ${news.id}`; //${news.id} Lo quite ya que no me dejaba ingresar a la ruta news/add
   let deleteStyle = {
-    color: "#20a8d8",
-    cursor: "pointer"
+    color: '#20a8d8',
+    cursor: 'pointer',
   };
   return (
     <tr key={news.id.toString()}>
       <th scope="row">{news.id}</th>
       <td>{news.imageMain}</td>
-      {/* <td>{news.link}</td> */}
-      {/* <td>{news.longDescription}</td> */}
-      {/* <td>{news.shortDescription}</td> */}
+      <td>{news.link}</td>
+      <td>{news.longDescription}</td>
+      <td>{news.shortDescription}</td>
       <td>{news.title}</td>
-      <td>
+      <td style={{display: 'flex'}}>
         <a href={newLink}>
-          <i className="fa fa-edit fa-2x" aria-hidden="true"></i>
-        </a>{" "}
+          <i
+            className="fa fa-edit fa-2x"
+            aria-hidden="true"
+            onClick={props.onEdit}
+            id={news.key}
+          ></i>
+        </a>{' '}
         &nbsp;
         <i
           className="fa fa-remove fa-2x"
@@ -49,6 +46,9 @@ class News extends Component {
   componentDidMount() {
     this.props.getNews();
   }
+  onEdit() {
+    this.props.editNews();
+  }
 
   render() {
     return (
@@ -56,13 +56,21 @@ class News extends Component {
         <Row>
           <Col md={12}>
             <Card>
-              <CardHeader style={{display:"flex", alignItems:"center"}}>
-                <i className=""></i> Noticias{" "}
-                <div style={{display:"flex", justifyContent:"flex-end", width:"100%", marginLeft:"85%" }} className="container">
+              <CardHeader style={{display: 'flex', alignItems: 'center'}}>
+                <i className=""></i> Noticias{' '}
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    width: '100%',
+                    marginLeft: '85%',
+                  }}
+                  className="container"
+                >
                   <Link to="/news/:id">
-                    <Button style={{ textAlign: "left" }} color="success">
+                    <Button style={{textAlign: 'left'}} color="success">
                       +
-                    </Button>{" "}
+                    </Button>{' '}
                   </Link>
                 </div>
               </CardHeader>
@@ -70,12 +78,12 @@ class News extends Component {
                 <Table responsive size="sm">
                   <thead>
                     <tr>
+                      <th>Id</th>
                       <th>Imagen</th>
-                      {/* <th>Link</th> */}
-                      {/* <th>Descripción Larga</th> */}
+                      <th>Link</th>
+                      <th>Descripción Larga</th>
                       <th>Descripción Corta</th>
                       <th>Titulo</th>
-                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -99,13 +107,14 @@ class News extends Component {
 const mapStateToProps = state => {
   return {
     news: state.newsReducer.news,
-    isLoading: state.newsReducer.isLoading
+    isLoading: state.newsReducer.isLoading,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    getNews: bindActionCreators(getNews, dispatch)
+    getNews: bindActionCreators(getNews, dispatch),
+    editNews: bindActionCreators(editNews, dispatch),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(News);

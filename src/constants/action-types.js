@@ -4,3 +4,4 @@ export const GET_DAILYREPORTS_LIST = "GET_DAILYREPORTS_LIST";
 export const GET_CONTEST_LIST = "GET_CONTEST_LIST";
 export const ISLOADING="ISLOADING";
 export const ADD_USER="ADD_USER";
+export const ADD_NEWS="ADD_NEWS";

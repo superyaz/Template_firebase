@@ -30,7 +30,7 @@ function ContestRow(props) {
       {/* <td>{contest.longDescription}</td> */}
       <td>{contest.shortDescription}</td>
       {/* <td>{contest.title}</td> */}
-      <td>
+      <td style={{display:"flex"}}>
         <a href={contestLink}>
           <i className="fa fa-edit fa-2x" aria-hidden="true"></i>
         </a>{" "}
@@ -60,7 +60,7 @@ class Contests extends Component {
               <CardHeader style={{display:"flex", alignItems:"center"}}>
                 <i className=""></i> Noticias{" "}
                 <div
-                  style={{ display:"flex", justifyContent:"flex-end", width:"100%", marginLeft:"85%" }}
+                  style={{ display:"flex", justifyContent:"flex-end" }}
                   className="container"
                 >
                   <Link to="/contests/:id">

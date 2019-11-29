@@ -1,8 +1,10 @@
 import {ISLOADING, GET_NEWS_LIST} from '../constants/action-types';
-import { db } from '../firebase/init';
+import { db, userRef, authRef } from '../firebase/init';
+import toastr from 'toastr';
 
 
-export const isloading = bool=>({
+
+export const isLoading = bool=>({
     type:ISLOADING,
     isloading:bool
 });
@@ -13,13 +15,12 @@ export const getNewsList = news =>({
 });
 
 
-
 /**
  * Me trae los datos desde la base de datos, al momento de cargarlos.
  */
 export const getNews = ()=>{
     return (dispatch) => {
-        dispatch(isloading(true));
+        dispatch(isLoading(true));
         let news = [];
         db.collection("news").get().then((snapshot)=>{
             snapshot.forEach(function(childSnapshot){
@@ -39,3 +40,25 @@ export const getNews = ()=>{
     }
 }
 
+// export const addNews = ()=>{
+//     return(dispatch)=>{
+//         dispatch(isLoading(true))
+//         let news[];
+//         db.collection("news")
+//     }
+// }
+
+export const editNews = (news) =>{
+    return (dispatch) =>{
+        dispatch(isLoading(true));
+        userRef
+            .child(news.key)
+            .update(news)
+            .catch(error =>{
+                toastr.error(error.message);
+            });
+            if (userRef){
+
+            }
+    }
+}
