@@ -1,5 +1,6 @@
 import * as firebase from "firebase";
 
+
 const config = {
   apiKey: "AIzaSyDkxWBSYS_C0jz3HKekskjKj7cerjnpmZk",
   authDomain: "quinteropartners-20193.firebaseapp.com",
@@ -17,3 +18,4 @@ export const db = firebase.firestore();
 const databaseRef = firebase.database().ref();
 export const userRef = databaseRef.child("users");
 export const authRef = firebase.auth();
+export const storage = firebase.storage();

@@ -12,130 +12,293 @@ import {
   CardHeader,
   CardBody
 } from "reactstrap";
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { addContests, editContests } from '../../actions/contestsactions';
+import toastr from 'toastr';
+import { storage } from '../../firebase/init';
+// import { PropTypes } from 'prop-types';
+// import { CKEditor } from 'ckeditor4-react';
+
+
 
 class AddContests extends Component {
+  constructor(props) {
+    super(props);
+    this.state = this.setInitialData();
+  }
+  setInitialData = () => {
+    return {
+      url: '',
+      imageMain: [],
+      images: [],
+      link: '',
+      longDescription: '',
+      shortDescription: '',
+      title: '',
+      isedit: false,
+      key: 0,
+      progress: 0,
+      data: '',
+    };
+
+  }
+
+  componentDidMount() {
+    let contests = this.props.contests;
+    let findcontests = contests.find(p => p.id === this.props.match.params.id);
+    if (typeof findcontests != 'undefined') {
+      this.setState({
+        imageMain: findcontests.imageMain,
+        images: findcontests.images,
+        link: findcontests.link,
+        longDescription: findcontests.longDescription,
+        shortDescription: findcontests.shortDescription,
+        title: findcontests.title,
+        isedit: false,
+        key: 0,
+      });
+    }
+  }
+
+  handleChange = (e) => {
+    const newState = this.state;
+    newState[e.target.id] = e.target.value;
+    this.setState(newState);
+  }
+
+  onEditorChange(evt) {
+    this.setState({
+      data: evt.editor.getData()
+    });
+  }
+
+  textEdit(changeEvent) {
+    this.setState({
+      data: changeEvent.target.value
+    });
+  }
+
+  //Le paso el estado al campo file dentro del formulario
+  fileCharge = (e) => {
+    if (e.target.files[0]) {
+      const imageFile = e.target.files[0];
+      this.setState({
+        imageMain: imageFile
+      });
+    }
+  }
+
+  handleUpload = () => {
+    return new Promise((resolve, reject) => {
+      const { imageMain } = this.state;
+      const uploadTask = storage.ref(`images/${imageMain.name}`).put(imageMain);
+      uploadTask.on(
+        "state_changed",
+        snapshot => {
+          // progress function ...
+          const progress = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          this.setState({ progress });
+        },
+        error => {
+          // Error function ...
+          toastr.error("Error al guardar la imagen " + error);
+        },
+        () => {
+          // complete function ...
+          storage
+            .ref("images")
+            .child(imageMain.name)
+            .getDownloadURL()
+            .then(url => {
+              this.setState({ url });
+              resolve(url);
+              console.log(url);
+            });
+        }
+      )
+    });
+  }
+
+  //Se ejecuta por medio del evento Onclick 
+  onSave = (e) => {
+    if (this.state.imageMain !== undefined) {
+      this.handleUpload().then(url => {
+        let dataJSON = {
+          date: new Date(),
+          imageMain: url,
+          images: this.state.images,
+          link: this.state.link,
+          longDescription: this.state.longDescription,
+          shortDescription: this.state.shortDescription,
+          title: this.state.title,
+        };
+        console.log(dataJSON);
+
+        //Llama la función addConstest para almacenar los datos en la bd
+        this.props.addContests(dataJSON);
+
+        if (this.state.isedit) {
+          dataJSON.key = this.state.key;
+          this.props.editContests(dataJSON);
+          this.props.push('/contests');
+          console.log(dataJSON)
+        } else {
+          this.onCancel();
+        }
+      })
+    }
+
+  };
+  onCancel = (e) => {
+
+    this.setState(this.setInitialData());
+
+  };
+
   render() {
     return (
-      <div  className="animate fadeIn">
+      <div className="animate fadeIn">
         <Row>
-          <Col style={{display:"flex", margin:"auto"}} xs="12" md="6">
+          <Col style={{ display: 'flex', margin: 'auto' }} xs="12" md="6">
             <Card>
               <CardHeader>
-                <strong>Agregar Concurso</strong>
+                <strong>Editar Noticia</strong>
               </CardHeader>
-              <CardBody style={{fontWeight:"lighter"}}>
-              <Form>
-                <FormGroup row>
-                  <Label for="exampleEmail" sm={2}>
-                    Email
+              <CardBody style={{ fontWeight: 'lighter' }}>
+                <Form
+                  action=""
+                  method="post"
+                  encType="multipart/form-data"
+                  className="form-horizontal"
+                >
+                  <FormGroup row>
+                    <Label htmlFor="name-input" sm={2}>
+                      Imagen Principal
                   </Label>
-                  <Col sm={10}>
-                    <Input
-                      type="email"
-                      name="email"
-                      id="exampleEmail"
-                      placeholder="with a placeholder"
-                    />
-                  </Col>
-                </FormGroup>
-                <FormGroup row>
-                  <Label for="examplePassword" sm={2}>
-                    Password
-                  </Label>
-                  <Col sm={10}>
-                    <Input
-                      type="password"
-                      name="password"
-                      id="examplePassword"
-                      placeholder="password placeholder"
-                    />
-                  </Col>
-                </FormGroup>
-                <FormGroup row>
-                  <Label for="exampleSelect" sm={2}>
-                    Select
-                  </Label>
-                  <Col sm={10}>
-                    <Input type="select" name="select" id="exampleSelect" />
-                  </Col>
-                </FormGroup>
-                <FormGroup row>
-                  <Label for="exampleSelectMulti" sm={2}>
-                    Select Multiple
-                  </Label>
-                  <Col sm={10}>
-                    <Input
-                      type="select"
-                      name="selectMulti"
-                      id="exampleSelectMulti"
-                      multiple
-                    />
-                  </Col>
-                </FormGroup>
-                <FormGroup row>
-                  <Label for="exampleText" sm={2}>
-                    Text Area
-                  </Label>
-                  <Col sm={10}>
-                    <Input type="textarea" name="text" id="exampleText" />
-                  </Col>
-                </FormGroup>
-                <FormGroup row>
-                  <Label for="exampleFile" sm={2}>
-                    File
-                  </Label>
-                  <Col sm={10}>
-                    <Input type="file" name="file" id="exampleFile" />
-                    <FormText color="muted">
-                      This is some placeholder block-level help text for the
-                      above input. It's a bit lighter and easily wraps to a new
-                      line.
+                    <Col sm={10}>
+                      <Input
+                        type="file"
+                        id="imageMain"
+                        onChange={this.fileCharge}
+                        placeholder="Enter Image"
+                        autoComplete="name"
+                      />
+                      <FormText className="help-block">
+                        Ingrese la Imagen
                     </FormText>
-                  </Col>
-                </FormGroup>
-                <FormGroup tag="fieldset" row>
-                  <legend className="col-form-label col-sm-2">
-                    Radio Buttons
-                  </legend>
-                  <Col sm={10}>
-                    <FormGroup check>
-                      <Label check>
-                        <Input type="radio" name="radio2" /> Option one is this
-                        and that—be sure to include why it's great
-                      </Label>
-                    </FormGroup>
-                    <FormGroup check>
-                      <Label check>
-                        <Input type="radio" name="radio2" /> Option two can be
-                        something else and selecting it will deselect option one
-                      </Label>
-                    </FormGroup>
-                    <FormGroup check disabled>
-                      <Label check>
-                        <Input type="radio" name="radio2" disabled /> Option
-                        three is disabled
-                      </Label>
-                    </FormGroup>
-                  </Col>
-                </FormGroup>
-                <FormGroup row>
-                  <Label for="checkbox2" sm={2}>
-                    Checkbox
+                    </Col>
+                  </FormGroup>
+
+                  <FormGroup row>
+                    <Label htmlFor="name-input" sm={2}>
+                      Imagen
                   </Label>
-                  <Col sm={{ size: 10 }}>
-                    <FormGroup check>
-                      <Label check>
-                        <Input type="checkbox" id="checkbox2" /> Check me out
-                      </Label>
-                    </FormGroup>
-                  </Col>
-                </FormGroup>
-                <FormGroup check row>
-                  <Col sm={{ size: 10, offset: 2 }}>
-                    <Button>Submit</Button>
-                  </Col>
-                </FormGroup>
-              </Form>
+                    <Col sm={10}>
+                      <Input
+                        type="text"
+                        id="images"
+                        value={this.state.images}
+                        onChange={this.handleChange}
+                        placeholder="Enter Image"
+                        autoComplete="name"
+                      />
+                      <FormText className="help-block">
+                        Ingrese la Imagen
+                    </FormText>
+                    </Col>
+                  </FormGroup>
+
+                  <FormGroup row>
+                    <Label htmlFor="name-input" sm={2}>
+                      Ingrese Link
+                  </Label>
+                    <Col sm={10}>
+                      <Input
+                        type="text"
+                        id="link"
+                        value={this.state.link}
+                        onChange={this.handleChange}
+                        placeholder="Enter Link"
+                        autoComplete="name"
+                      />
+                      <FormText className="help-block">Ingresa Link</FormText>
+                    </Col>
+                  </FormGroup>
+
+                  <FormGroup row>
+                    <Label htmlFor="exampleText" sm={2}>
+                      Descripción Larga
+                  </Label>
+                    <Col sm={10}>
+                      <Input
+                        type="text"
+                        placeholder="Enter Long Description"
+                        id="longDescription"
+                        value={this.state.longDescription}
+                        onChange={this.handleChange}
+                        autoComplete="name"
+                      />
+                      <FormText className="help-block">
+                        Ingrese Descripción Larga
+                    </FormText>
+                    </Col>
+                  </FormGroup>
+
+                  <FormGroup row>
+                    <Label for="exampleSelectMulti" sm={2}>
+                      Descripción Corta
+                  </Label>
+                    <Col sm={10}>
+                      <Input
+                        type="text"
+                        placeholder="Enter Short Description"
+                        id="shortDescription"
+                        value={this.state.shortDescription}
+                        onChange={this.handleChange}
+                        autoComplete="name"
+                      />
+                      <FormText className="help-block">
+                        Ingrese Descripción Corta
+                    </FormText>
+                    </Col>
+                  </FormGroup>
+
+                  <FormGroup row>
+                    <Label htmlFor="name-input" sm={2}>
+                      Titulo
+                  </Label>
+                    <Col sm={10}>
+                      <Input
+                        type="text"
+                        id="title"
+                        value={this.state.title}
+                        onChange={this.handleChange}
+                        placeholder="Enter Title"
+                        autoComplete="name"
+                      />
+                      <FormText className="help-block">Enter Title</FormText>
+                    </Col>
+                  </FormGroup>
+
+                </Form>
+                <Card>
+                  <Button
+                    type="submit"
+                    size="sm"
+                    color="primary"
+                    onClick={this.onSave.bind(this)}
+                  >Guardar</Button>
+                  &nbsp;
+                <Button
+                    type="reset"
+                    size="sm"
+                    color="danger"
+                    onClick={this.onCancel.bind(this)}
+                  >Cancelar</Button>
+                </Card>
               </CardBody>
             </Card>
           </Col>
@@ -145,4 +308,17 @@ class AddContests extends Component {
   }
 }
 
-export default AddContests;
+const mapStateToProps = (state) => {
+  return {
+    isLoading: state.contestsReducer.isLoading,
+    contests: state.contestsReducer.contests,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addContests: bindActionCreators(addContests, dispatch),
+    editUser: bindActionCreators(editContests, dispatch),
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(AddContests);

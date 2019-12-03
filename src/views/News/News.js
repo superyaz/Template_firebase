@@ -1,9 +1,10 @@
-import React, {Component} from 'react';
-import {Card, CardBody, CardHeader, Col, Row, Table, Button} from 'reactstrap';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {getNews, editNews} from '../../actions/newsactions';
-import {Link} from 'react-router-dom';
+import React, { Component } from 'react';
+import { Card, CardBody, CardHeader, Col, Row, Table, Button } from 'reactstrap';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { getNews, editNews, addNews } from '../../actions/newsactions';
+import { Link } from 'react-router-dom';
+
 
 function NewRow(props) {
   const news = props.news;
@@ -20,12 +21,12 @@ function NewRow(props) {
       <td>{news.longDescription}</td>
       <td>{news.shortDescription}</td>
       <td>{news.title}</td>
-      <td style={{display: 'flex'}}>
+      <td style={{ display: 'flex' }}>
         <a href={newLink}>
           <i
             className="fa fa-edit fa-2x"
             aria-hidden="true"
-            onClick={props.onEdit}
+            // onClick={props.onEdit()}
             id={news.key}
           ></i>
         </a>{' '}
@@ -46,6 +47,11 @@ class News extends Component {
   componentDidMount() {
     this.props.getNews();
   }
+
+  addNews() {
+    this.props.addNews();
+  }
+
   onEdit() {
     this.props.editNews();
   }
@@ -56,19 +62,14 @@ class News extends Component {
         <Row>
           <Col md={12}>
             <Card>
-              <CardHeader style={{display: 'flex', alignItems: 'center'}}>
+              <CardHeader style={{ display: 'flex', alignItems: 'center' }}>
                 <i className=""></i> Noticias{' '}
                 <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    width: '100%',
-                    marginLeft: '85%',
-                  }}
+                  style={{ display: "flex", justifyContent: "flex-end" }}
                   className="container"
                 >
                   <Link to="/news/:id">
-                    <Button style={{textAlign: 'left'}} color="success">
+                    <Button style={{ textAlign: 'left' }} color="success">
                       +
                     </Button>{' '}
                   </Link>
@@ -115,6 +116,7 @@ const mapDispatchToProps = dispatch => {
   return {
     getNews: bindActionCreators(getNews, dispatch),
     editNews: bindActionCreators(editNews, dispatch),
+    addNews: bindActionCreators(addNews, dispatch),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(News);

@@ -8,9 +8,9 @@ import dailyreportsReducer from './dailyReportsreduce';
 import contestsReducer from './contestsreduce';
 
 const rootReducer = combineReducers({
-    userReducer, 
-    newsReducer,
-    dailyreportsReducer,
-    contestsReducer,
+  userReducer,
+  newsReducer,
+  dailyreportsReducer,
+  contestsReducer,
 });
 export default rootReducer;

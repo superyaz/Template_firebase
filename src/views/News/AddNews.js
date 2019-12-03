@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Col,
   Button,
@@ -11,11 +11,13 @@ import {
   Card,
   CardHeader,
   CardBody,
-  
 } from 'reactstrap';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {editNews} from '../../actions/newsactions';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { editNews, addNews } from '../../actions/newsactions';
+import toastr from 'toastr';
+import { storage } from '../../firebase/init';
+
 
 class AddNews extends Component {
   constructor(props) {
@@ -24,14 +26,16 @@ class AddNews extends Component {
   }
   setInitialData = () => {
     return {
-      imageMain: '',
+      url: '',
+      imageMain: [],
       link: '',
       longDescription: '',
       shortDescription: '',
       title: '',
-      isedit: false,
+      isedit: true,
       key: 0,
-    };
+      progress: 0,
+    }
   };
 
   componentDidMount() {
@@ -54,37 +58,93 @@ class AddNews extends Component {
     this.setState(newState);
   };
 
-  onSave = (e) => {
-    let news = {
-      imageMain: this.state.imageMain,
-      link: this.state.link,
-      longDescription: this.state.longDescription,
-      shortDescription: this.state.shortDescription,
-      title: this.state.title,
-    };
-    console.log(news);
-    if (this.state.isedit) {
-      news.key = this.state.key;
-      this.props.addNew(news);
-      this.props.history.push('/news');
-    } else {
-      this.onCancel();
+  //Le paso el estado al campo file dentro del formulario
+  fileCharge = (e) => {
+    if (e.target.files[0]) {
+      const imageFile = e.target.files[0];
+      this.setState({
+        imageMain: imageFile
+      });
     }
-  };
+  }
+
+  handleUpload = () => {
+    return new Promise((resolve, reject) => {
+      const { imageMain } = this.state;
+      const uploadTask = storage.ref(`images/${imageMain.name}`).put(imageMain);
+      uploadTask.on(
+        "state_changed",
+        snapshot => {
+          // progress function ...
+          const progress = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          this.setState({ progress });
+        },
+        error => {
+          // Error function ...
+          toastr.error("Error al guardar la imagen " + error)
+        },
+        () => {
+          // complete function ...
+          storage
+            .ref("images")
+            .child(imageMain.name)
+            .getDownloadURL()
+            .then(url => {
+              this.setState({ url });
+              resolve(url)
+              console.log(url);
+            });
+        }
+      );
+    });
+  }
+
+  //Se ejecuta por medio del evento Onclick 
+  onSave = (e) => {
+    if (this.state.imageMain !== undefined) {
+      this.handleUpload().then(url => {
+        let dataJSON = {
+          date: new Date(),
+          imageMain: url,
+          link: this.state.link,
+          longDescription: this.state.longDescription,
+          shortDescription: this.state.shortDescription,
+          title: this.state.title,
+        };
+        console.log(dataJSON);
+
+        //Llama la función addNews para almacenar los datos en la bd
+        this.props.addNews(dataJSON);
+
+        if (this.state.isedit) {
+          dataJSON.key = this.state.key;
+          this.props.editNews(dataJSON);
+          this.props.push('/news');
+          console.log(dataJSON)
+        } else {
+          this.onCancel();
+        }
+      });
+    };
+  }
+
   onCancel = (e) => {
     this.setState(this.setInitialData());
   };
+
 
   render() {
     return (
       <div className="animate fadeIn">
         <Row>
-          <Col style={{display: 'flex', margin: 'auto'}} xs="12" md="6">
+          <Col style={{ display: 'flex', margin: 'auto' }} xs="12" md="6">
             <Card>
               <CardHeader>
                 <strong>Editar Noticia</strong>
               </CardHeader>
-              <CardBody style={{fontWeight: 'lighter'}}>
+              <CardBody style={{ fontWeight: 'lighter' }}>
                 <Form
                   action=""
                   method="post"
@@ -97,10 +157,9 @@ class AddNews extends Component {
                     </Label>
                     <Col sm={10}>
                       <Input
-                        type="text"
+                        type="file"
                         id="imageMain"
-                        value={this.state.imageMain}
-                        onChange={this.handleChange}
+                        onChange={this.fileCharge}
                         placeholder="Enter Image"
                         autoComplete="name"
                       />
@@ -170,45 +229,32 @@ class AddNews extends Component {
                       Titulo
                     </Label>
                     <Col sm={10}>
-                        <Input
-                          type="text"
-                          id="title"
-                          value={this.state.title}
-                          onChange={this.handleChange}
-                          placeholder="Enter Title"
-                          autoComplete="name"
+                      <Input
+                        type="text"
+                        id="title"
+                        value={this.state.title}
+                        onChange={this.handleChange}
+                        placeholder="Enter Title"
+                        autoComplete="name"
                       />
                       <FormText className="help-block">Enter Title</FormText>
                     </Col>
                   </FormGroup>
 
-                  <FormGroup row>
-                    <Label for="exampleFile" sm={2}>
-                      Archivo
-                    </Label>
-                    <Col sm={10}>
-                      <Input type="file" name="file" id="exampleFile" />
-                      <FormText color="muted">
-                          This is some placeholder block-level help text for the
-                          above input. It's a bit lighter and easily wraps to a
-                          new line.
-                      </FormText>
-                    </Col>
-                  </FormGroup>
                 </Form>
                 <Card>
                   <Button
                     type="submit"
                     size="sm"
                     color="primary"
-                    onClick={this.onSave}
+                    onClick={this.onSave.bind(this)}
                   >Guardar</Button>
                   &nbsp;
                   <Button
                     type="reset"
                     size="sm"
                     color="danger"
-                    onClick={this.onCancel}
+                    onClick={this.onCancel.bind(this)}
                   >Cancelar</Button>
                 </Card>
               </CardBody>
@@ -220,16 +266,19 @@ class AddNews extends Component {
   }
 }
 
-const mapStateToProps = state => {
+
+const mapStateToProps = (state) => {
   return {
     isLoading: state.newsReducer.isLoading,
     news: state.newsReducer.news,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    editUser: bindActionCreators(editNews,dispatch),
+    addNews: bindActionCreators(addNews, dispatch),
+    editUser: bindActionCreators(editNews, dispatch),
+
   };
 };
 

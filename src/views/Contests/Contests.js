@@ -10,7 +10,7 @@ import {
 } from "reactstrap";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { getContests } from "../../actions/contestsactions";
+import { getContests, addContests } from "../../actions/contestsactions";
 import { Link } from "react-router-dom";
 
 function ContestRow(props) {
@@ -20,19 +20,21 @@ function ContestRow(props) {
     color: "#20a8d8",
     cursor: "pointer"
   };
-
   return (
     <tr key={contest.id.toString()}>
       <th scope="row">{contest.id}</th>
       <td>{contest.imageMain}</td>
-      {/* <td>{contest.images}</td> */}
-      {/* <td>{contest.link}</td> */}
-      {/* <td>{contest.longDescription}</td> */}
+      <td>{contest.images}</td>
+      <td>{contest.link}</td>
+      <td>{contest.longDescription}</td>
       <td>{contest.shortDescription}</td>
-      {/* <td>{contest.title}</td> */}
-      <td style={{display:"flex"}}>
+      <td>{contest.title}</td>
+      <td style={{ display: "flex" }}>
         <a href={contestLink}>
-          <i className="fa fa-edit fa-2x" aria-hidden="true"></i>
+          <i className="fa fa-edit fa-2x"
+            aria-hidden="true"
+            onClick={props.onEdit}
+            id={contest.key}></i>
         </a>{" "}
         &nbsp;
         <i
@@ -51,16 +53,26 @@ class Contests extends Component {
   componentDidMount() {
     this.props.getContests();
   }
+
+  addContests() {
+    this.props.addContests();
+  }
+  onEdit() {
+    // this.props.editContests
+  }
+
+
+
   render() {
     return (
       <div className="animated fadeIn">
         <Row>
           <Col md={12}>
             <Card>
-              <CardHeader style={{display:"flex", alignItems:"center"}}>
+              <CardHeader style={{ display: "flex", alignItems: "center" }}>
                 <i className=""></i> Noticias{" "}
                 <div
-                  style={{ display:"flex", justifyContent:"flex-end" }}
+                  style={{ display: "flex", justifyContent: "flex-end" }}
                   className="container"
                 >
                   <Link to="/contests/:id">
@@ -76,12 +88,11 @@ class Contests extends Component {
                     <tr>
                       <th>Id</th>
                       <th scope="col">Imagen principal</th>
-                      {/* <th scope="col">Imagen</th> */}
-                      {/* <th scope="col">Link</th> */}
-                      {/* <th scope="col">Descripción Larga</th> */}
+                      <th scope="col">Imagen</th>
+                      <th scope="col">Link</th>
+                      <th scope="col">Descripción Larga</th>
                       <th scope="col">Descripción Corta</th>
-                      {/* <th scope="col">Titulo</th> */}
-                      <th scope="col"></th>
+                      <th scope="col">Titulo</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -103,16 +114,17 @@ class Contests extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     contests: state.contestsReducer.contests,
     isLoading: state.contestsReducer.isLoading
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    getContests: bindActionCreators(getContests, dispatch)
+    getContests: bindActionCreators(getContests, dispatch),
+    addContests: bindActionCreators(addContests, dispatch)
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Contests);

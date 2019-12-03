@@ -1,8 +1,8 @@
-import { ISLOADING, GET_USERS_LIST} from '../constants/action-types';
+import { ISLOADING, GET_USERS_LIST } from '../constants/action-types';
 const getInitialState = () => ({
     users: [],
     isLoading: false,
-  });
+});
 const userReducer = (state = getInitialState(), action) => {
     switch (action.type) {
         case ISLOADING:
